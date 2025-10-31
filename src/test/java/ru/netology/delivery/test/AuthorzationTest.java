@@ -2,15 +2,15 @@ package ru.netology.delivery.test;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
-import ru.netology.data.DataGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.netology.delivery.data.DataGenerator;
 
 import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.closeWebDriver;
-import static ru.netology.data.DataGenerator.Registration.getUser;
+import static ru.netology.delivery.data.DataGenerator.Registration.getUser;
 
 public class EntryFunctionTest {
 
