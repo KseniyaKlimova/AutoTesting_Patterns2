@@ -11,7 +11,7 @@ import java.util.Locale;
 import static io.restassured.RestAssured.given;
 
 public class DataGenerator {
-    private static final Faker faker = new Faker(new Locale("en"));
+    private static final Faker FAKER = new Faker(new Locale("en"));
 
     private static final RequestSpecification requestSpec = new RequestSpecBuilder()
             .setBaseUri("http://localhost")
@@ -24,10 +24,9 @@ public class DataGenerator {
     private DataGenerator() {
     }
 
-    static void createUser(DataGenerator.RegistrationDto user) {
+    static void sendRequest(RegistrationDto user) {
         given()
                 .spec(requestSpec)
-                .contentType(ContentType.JSON)
                 .body(user)
                 .when().log().all()
                 .post("/api/system/users")
@@ -35,51 +34,31 @@ public class DataGenerator {
                 .statusCode(200);
     }
 
-    public static String generateLogin() {
-        return faker.name().username();
+    public static String getRandomLogin() {
+        return FAKER.name().username();
     }
 
-    public static String generatePassword() {
-        return faker.internet().password();
+    public static String getRandomPassword() {
+        return FAKER.internet().password();
     }
 
     public static class Registration {
-
         private Registration() {
         }
 
         public static RegistrationDto getUser(String status) {
-            return new RegistrationDto(generateLogin(), generatePassword(), status);
+            return new RegistrationDto(getRandomLogin(), getRandomPassword(), status);
         }
 
-        public static RegistrationDto getRegistrationUser(String status) {
+        public static RegistrationDto getRegisteredUser(String status) {
             var user = getUser(status);
-            createUser(user);
+            sendRequest(user);
             return user;
         }
 
-        public static RegistrationDto getBlockedUser(RegistrationDto originalUser) {
-            var blockedUser = new RegistrationDto(
-                    originalUser.getLogin(),
-                    originalUser.getPassword(),
-                    "blocked"
-            );
-            createUser(blockedUser);
-            return blockedUser;
-        }
-
-        public static RegistrationDto getActiveUser(RegistrationDto originalUser) {
-            var activeUser = new RegistrationDto(
-                    originalUser.getLogin(),
-                    originalUser.getPassword(),
-                    "active"
-            );
-            createUser(activeUser);
-            return activeUser;
-        }
     }
 
-    @Value
+        @Value
     public static class RegistrationDto {
         String login;
         String password;
